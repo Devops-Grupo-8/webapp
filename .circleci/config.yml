@@ -16,7 +16,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     steps:
-      - checkogit ut
+      - checkout
       - setup_remote_docker:
           version: 20.10.8
       - run:
