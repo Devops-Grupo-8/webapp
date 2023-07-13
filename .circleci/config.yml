@@ -21,7 +21,7 @@ jobs:
             export PATH=$PWD/sonar-scanner-4.6.2.2472-linux/bin:$PATH
     - run:
         name: Run Tests with SonarQube Scanner
-        command: sonar-scanner
+        command: sonar-scanner -Dsonar.projectKey=Devops-Grupo-8_webapp -Dsonar.sources=src -Dsonar.host.url=https://sonarqube.example.com -Dsonar.login=devops8
   deploy:
     docker:
       - image: circleci/python:3.7
