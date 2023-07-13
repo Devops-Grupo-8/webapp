@@ -13,7 +13,12 @@ jobs:
       - image: circleci/node:14
     steps:
     - run: npm install
-    - run: sonar-scanner -Dsonar.login=devops8 -Dsonar.projectKey=Devops-Grupo-8_webapp
+    - run: sonar-scanner 
+              -Dsonar.projectKey=Devops-Grupo-8_webapp \
+              -Dsonar.organization=Devops-Grupo-8 \
+              -Dsonar.sources=src \
+              -Dsonar.host.url=https://sonarcloud.io \
+              -Dsonar.login=devops8
   deploy:
     docker:
       - image: circleci/python:3.7
