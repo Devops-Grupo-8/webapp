@@ -11,14 +11,17 @@ jobs:
     docker:
       - image: circleci/node:14
     steps:
+    - checkout
     - run: npm install
-    - run: npm i sonar-scanner
-    - run: sonar-scanner 
-              -Dsonar.projectKey=Devops-Grupo-8_webapp \
-              -Dsonar.organization=Devops-Grupo-8 \
-              -Dsonar.sources=src \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=devops8
+    - run:
+          name: Install SonarQube Scanner
+          command: |
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+            unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+            export PATH=$PWD/sonar-scanner-4.6.2.2472-linux/bin:$PATH
+    - run:
+        name: Run Tests with SonarQube Scanner
+        command: sonar-scanner
   deploy:
     docker:
       - image: circleci/python:3.7
