@@ -6,12 +6,17 @@ jobs:
     steps:
       - checkout
       - run: npm install
+      - run: |
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli.zip
+          unzip sonar-scanner-cli.zip
+          export PATH=$PATH:/path/to/sonar-scanner/bin
       - run: npm run build
   test:
     docker:
       - image: circleci/node:14
     steps:
-      - run: npm run test
+    - run: npm install
+    - run: sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=Devops-Grupo-8_webapp
   deploy:
     docker:
       - image: circleci/python:3.7
