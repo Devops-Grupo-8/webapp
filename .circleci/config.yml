@@ -6,13 +6,13 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm i sonar-scanner
       - run: npm run build
   test:
     docker:
       - image: circleci/node:14
     steps:
     - run: npm install
+    - run: npm i sonar-scanner
     - run: sonar-scanner 
               -Dsonar.projectKey=Devops-Grupo-8_webapp \
               -Dsonar.organization=Devops-Grupo-8 \
