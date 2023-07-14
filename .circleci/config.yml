@@ -1,51 +1,64 @@
+commands:
+    scan:
+        description: Detect bugs and vulnerabilities
+        parameters:
+            project_root:
+                default: ./src
+                description: the root of the project that should be analyzed (relative to the root directory of the repository)
+                type: string
+            sonar_token_variable_name:
+                default: devops8
+                description: the name of the environment variable where the SonarCloud API token is stored
+                type: env_var_name
+        steps:
+            - run:
+                command: |
+                    set -e
+                    VERSION=4.7.0.2747
+                    SONAR_TOKEN=$<<parameters.sonar_token_variable_name>>
+                    SCANNER_DIRECTORY=/tmp/cache/scanner
+                    export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
+                    OS="linux"
+                    echo $SONAR_USER_HOME
+
+                    if [[ ! -x "$SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner" ]]; then
+                      curl -Ol https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION-$OS.zip
+                      unzip -qq -o sonar-scanner-cli-$VERSION-$OS.zip -d $SCANNER_DIRECTORY
+                    fi
+
+                    chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
+                    chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
+
+                    cd <<parameters.project_root>>
+                    $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
+                environment:
+                    SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://sonarcloud.io"}'
+                name: SonarCloud
+            - save_cache:
+                key: v<<parameters.cache_version>>-sonarcloud-scanner-4.7.0.2747
+                paths: /tmp/cache/scanner
+description: Detect bugs and vulnerabilities in your repository.
+display:
+    home_url: https://www.sonarcloud.io/
+    source_url: https://github.com/SonarSource/sonarcloud-circleci-orb
+examples:
+    scan-docker:
+        description: Use the sonarcloud orb to detect bugs and vulnerabilities in your repository
+        usage:
+            jobs:
+                build:
+                    docker:
+                        - image: node:latest
+                    steps:
+                        - checkout
+                        - sonarcloud/scan
+            orbs:
+                sonarcloud: sonarsource/sonarcloud@1.1.0
+            version: 2.1
+            workflows:
+                main:
+                    jobs:
+                        - build:
+                            context: sonarcloud
 version: 2.1
-jobs:
-  build:
-    docker:
-      - image: circleci/node:14
-    steps:
-      - checkout
-       # Crear una carpeta para las dependencias
-      - run:
-          name: Create node_modules directory
-          command: mkdir -p /home/circleci/project/node_modules
 
-      # Instalar dependencias en la carpeta local
-      - run:
-          name: Install dependencies
-          command: npm install --prefix=/home/circleci/project
-      - run:
-          name: Build de la aplicacion
-          command: npm run build
-  test:
-    docker:
-      - image: circleci/node:14
-    steps:
-      - checkout
-       # Crear una carpeta para las dependencias
-      - run:
-          name: Create node_modules directory
-          command: mkdir -p /home/circleci/project/node_modules
-
-      # Instalar dependencias en la carpeta local
-      - run:
-          name: Install dependencies
-          command: npm install --prefix=/home/circleci/project
-      - run:
-          name: SonarCloud Analysis
-          command: |
-            npm install -g sonarqube-scanner
-            sonar-scanner \
-              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-              -Dsonar.organization=$SONAR_ORGANIZATION \
-              -Dsonar.sources=src \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=$SONAR_TOKEN
-workflows:
-  version: 2
-  build-test:
-    jobs:
-      - build
-      - test:
-          requires:
-            - build
