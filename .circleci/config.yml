@@ -7,6 +7,7 @@ orbs:
   aws-s3: circleci/aws-s3@3.1.1
 jobs:
   build:
+    stage: dist
     docker:
       - image: circleci/node:12.9.1-browsers
     steps:
@@ -17,6 +18,9 @@ jobs:
       - run:
           name: Build app
           command: npm run build
+    artifacts:
+    paths:
+      - dist/
   deploy:
     docker:
       - image: circleci/node:12.9.1-browsers
