@@ -42,12 +42,9 @@ jobs:
           name: Run Tests
           command: npm test
 
-      - run:
-          name: Deploy to S3
-          command: 
-            from: |
-              dist/
-              to: s3://devops-grupo-8-bucket-prod/
+      - aws-s3/sync:
+          from: dist/
+          to: s3://devops-grupo-8-bucket-prod/
 
 workflows:
   version: 2
