@@ -1,46 +1,49 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@4.7
-
 jobs:
-  build-and-test:
+  build:
     docker:
-      - image: cimg/node:16.10
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          name: Run tests
-          command: npm test
-  deploy_to_production:
-    docker:
-      - image: cimg/python:3.10.2
-    steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: false
-      - run:
-          name: Deploy to EKS
-          command: |
-              curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-              chmod +x ./kubectl
-              pip3 install awscli --upgrade
-              aws --version
-              aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 207100238581.dkr.ecr.us-east-2.amazonaws.com
-              aws eks update-kubeconfig --name my-cluster
-              LATEST_SHA=$(git rev-parse HEAD)
-              docker build -t express-eks:$LATEST_SHA .
-              docker tag express-eks:$LATEST_SHA 207100238581.dkr.ecr.us-east-2.amazonaws.com/express-eks:$LATEST_SHA
-              docker push 207100238581.dkr.ecr.us-east-2.amazonaws.com/express-eks:$LATEST_SHA
-              ./kubectl set image deployment/myapp myapp=207100238581.dkr.ecr.us-east-2.amazonaws.com/express-eks:$LATEST_SHA -n default              
+      - image: circleci/node:14
 
+    steps:
+      - checkout
+
+      # Aquí se pueden agregar pasos adicionales para construir y probar la aplicación
+      # según las necesidades específicas de tu proyecto.
+
+  deploy:
+    docker:
+      - image: circleci/python:3.9
+
+    steps:
+      - checkout
+
+      # Configurar las credenciales de AWS
+      - run:
+          name: Configure AWS credentials
+          command: |
+            echo 'export AWS_ACCESS_KEY_ID=ASIAQU62E6EGWJSARNFO' >> $BASH_ENV
+            echo 'export AWS_SECRET_ACCESS_KEY=UDJR1X5Fe0L1HL67wbhTuEryuCin3XsZNOuz1+zB' >> $BASH_ENV
+            echo 'export AWS_DEFAULT_REGION=us-east-1' >> $BASH_ENV
+            source $BASH_ENV
+
+      # Instalar la AWS CLI
+      - run:
+          name: Install AWS CLI
+          command: |
+            pip install awscli
+
+      # Desplegar la aplicación en el bucket de S3
+      - run:
+          name: Deploy to S3
+          command: |
+            aws s3 sync ./dist s3://devops-grupo-8-bucket-prod
 
 workflows:
-  sample:
+  version: 2.1
+  build_and_deploy:
     jobs:
-      - build-and-test
-      - deploy_to_production:
+      - build
+      - deploy:
           requires:
-            - build-and-test
+            - build
