@@ -25,7 +25,6 @@ jobs:
       - aws-s3/sync:
           from: build
           to: s3://devops-grupo-8-bucket-dev/
-          command: aws s3 sync build s3://devops-grupo-8-bucket-dev/ --acl public-read --cache-control "max-age=31536000"
 
 workflows:
   build-deploy:
