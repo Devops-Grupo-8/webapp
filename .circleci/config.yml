@@ -7,9 +7,12 @@ jobs:
 
     steps:
       - checkout
-
-      # Aquí se pueden agregar pasos adicionales para construir y probar la aplicación
-      # según las necesidades específicas de tu proyecto.
+      - run:
+          name: Instalar dependencias
+          command: npm install
+      - run:
+          name: Build de la App
+          command: npm run build
 
   deploy:
     docker:
