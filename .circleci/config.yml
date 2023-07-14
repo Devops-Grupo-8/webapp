@@ -46,9 +46,15 @@ jobs:
           name: Run Tests
           command: npm test
 
-      - aws-s3/sync:
-          from: dist/
-          to: s3://devops-grupo-8-bucket-prod/
+      - run:
+          name: Deploy to S3
+          command: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default.region $AWS_DEFAULT_REGION
+            aws-s3/sync:
+              from: dist/
+              to: s3://devops-grupo-8-bucket-prod/
 
 workflows:
   version: 2
