@@ -20,6 +20,8 @@ jobs:
   deploy:
     docker:
       - image: circleci/node:12.9.1-browsers
+        dependencies:
+        - dist
     steps:
       - checkout
       - aws-s3/sync:
