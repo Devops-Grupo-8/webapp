@@ -24,7 +24,7 @@ jobs:
       - checkout
       - aws-s3/sync:
           from: dist
-          to: s3://devops-grupo-8-bucket-dev/
+          to: s3://devops-grupo-8-bucket-prod/
 
 workflows:
   build-deploy:
