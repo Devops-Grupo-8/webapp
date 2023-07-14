@@ -1,8 +1,5 @@
 version: 2.1
 
-  AWS_ACCESS_KEY_ID: ASIAQU62E6EGWJSARNFO
-  AWS_SECRET_ACCESS_KEY: UDJR1X5Fe0L1HL67wbhTuEryuCin3XsZNOuz1+zB
-
 jobs:
   build-test-deploy:
     docker:
@@ -36,8 +33,8 @@ jobs:
       - run:
           name: Deploy to S3
           command: |
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set aws_access_key_id ASIAQU62E6EGWJSARNFO
+            aws configure set aws_secret_access_key UDJR1X5Fe0L1HL67wbhTuEryuCin3XsZNOuz1+zB
             aws configure set default.region us-east-1
             aws s3 sync build/ s3://devops-grupo-8-bucket-prod
 
