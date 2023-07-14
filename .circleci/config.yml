@@ -1,3 +1,24 @@
+# Nombre del proyecto
+sonar.projectKey: "Devops-Grupo-8_webapp"
+
+# Nombre visible del proyecto
+sonar.projectName: "Webapp"
+
+# Versión del proyecto (opcional)
+sonar.projectVersion: "1.0"
+
+# Rutas de código fuente
+sonar.sources: "src"
+
+# Lenguaje del proyecto
+sonar.language: "javascript"
+
+# Ruta del archivo de informe generado por SonarCloud
+sonar.report.export.path: "sonar-report.json"
+
+# Token de acceso a SonarCloud
+sonar.login: "devops8"
+
 version: 2.1
 jobs:
   build:
@@ -8,21 +29,20 @@ jobs:
       - run: npm install
       - run: npm run build
   test:
-    docker:
-      - image: circleci/node:14
+    runs-on: ubuntu-latest
+
     steps:
-    - checkout
-    - run: npm install
-    - run:
-          name: Install SonarQube Scanner
-          command: |
-            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-            unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-            export PATH=$PWD/sonar-scanner-4.6.2.2472-linux/bin:
-    - run:
-        name: Run Tests with SonarQube Scanner
-        command: $PATH=$PWD/sonar-scanner -Dsonar.projectKey=Devops-Grupo-8_webapp -Dsonar.sources=src -Dsonar.host.url=https://sonarqube.example.com -Dsonar.login=devops8
-  deploy:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.projectKey=Devops-Grupo-8_webapp
+            -Dsonar.organization=Devops-Grupo-8
+           
+    deploy:
     docker:
       - image: circleci/python:3.7
     steps:
