@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Instalar dependencias
-          command: npm install
+          command: npm install --prefix=/home/circleci/project
       - run:
           name: Build de la aplicacion
           command: npm run build
@@ -16,7 +16,7 @@ jobs:
       - image: circleci/node:14
     steps:
       - checkout
-      - run: npm install
+      - run: npm install --prefix=/home/circleci/project
       - run:
           name: SonarCloud Analysis
           command: |
