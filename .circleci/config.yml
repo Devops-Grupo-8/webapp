@@ -1,79 +1,29 @@
-# Nombre del proyecto
-sonar.projectKey: "Devops-Grupo-8_webapp"
-
-# Nombre visible del proyecto
-sonar.projectName: "Webapp"
-
-# Versión del proyecto (opcional)
-sonar.projectVersion: "1.0"
-
-# Rutas de código fuente
-sonar.sources: "src"
-
-# Lenguaje del proyecto
-sonar.language: "javascript"
-
-# Ruta del archivo de informe generado por SonarCloud
-sonar.report.export.path: "sonar-report.json"
-
-# Token de acceso a SonarCloud
-sonar.login: "devops8"
-
 version: 2.1
 jobs:
-  build:
+test:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run:
+          name: Instalar dependencias
+          command: npm install
+      - run:
+          name: Build de la aplicacion
+          command: npm run build
+  test:
     docker:
       - image: circleci/node:14
     steps:
       - checkout
       - run: npm install
-      - run: npm run build
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          args: >
-            -Dsonar.projectKey=Devops-Grupo-8_webapp
-            -Dsonar.organization=Devops-Grupo-8
-           
-    deploy:
-    docker:
-      - image: circleci/python:3.7
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 20.10.8
       - run:
-          name: Install AWS CLI
+          name: SonarCloud Analysis
           command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Configure AWS Credentials
-          command: |
-            aws configure set aws_access_key_id YOUR_ACCESS_KEY
-            aws configure set aws_secret_access_key YOUR_SECRET_ACCESS_KEY
-            aws configure set default.region YOUR_AWS_REGION
-      - run:
-          name: Deploy to EKS Cluster
-          command: |
-            # Command to deploy to EKS cluster
-workflows:
-  version: 2
-  build-test-deploy:
-    jobs:
-      - build
-      - test:
-          requires:
-            - build
-      - deploy:
-          requires:
-            - build
-            - test
+            npm install -g sonarqube-scanner
+            sonar-scanner \
+              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+              -Dsonar.organization=$SONAR_ORGANIZATION \
+              -Dsonar.sources=src \
+              -Dsonar.host.url=https://sonarcloud.io \
+              -Dsonar.login=$SONAR_TOKEN
