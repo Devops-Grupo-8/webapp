@@ -23,7 +23,7 @@ jobs:
     steps:
       - checkout
       - aws-s3/sync:
-          from: ./dist
+          from: dist
           to: s3://devops-grupo-8-bucket-dev/
 
 workflows:
