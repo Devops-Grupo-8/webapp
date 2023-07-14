@@ -1,7 +1,7 @@
 version: 2.1
 environment:
-  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  AWS_ACCESS_KEY_ID: ASIAQU62E6EGWJSARNFO
+  AWS_SECRET_ACCESS_KEY: UDJR1X5Fe0L1HL67wbhTuEryuCin3XsZNOuz1+zB
 orbs:
   aws-s3: circleci/aws-s3@3.1.1
 jobs:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install dependencies 
           command: npm install
       - run:
           name: Build app
