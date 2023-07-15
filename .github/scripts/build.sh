@@ -7,4 +7,5 @@ export COMMIT_DATE="$(git log --date=format:'%Y-%m-%d %H:%M:%S' --pretty="%cd" -
 
 rm -rf ./out
 
+npm install
 npm run build
