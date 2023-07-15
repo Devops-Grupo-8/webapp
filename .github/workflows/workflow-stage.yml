@@ -1,12 +1,12 @@
-name: Github Action Workflow DEV
+name: Github Action Workflow STAGE
 
 on:
   push:
     branches:
-      - dev
+      - staging
   repository_dispatch:
     types:
-      - build-dev
+      - build-stage
   workflow_dispatch:
 
 concurrency:
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build-dev:
-    uses: Devops-Grupo-8/webapp/.github/workflows/deploy-to-s3.yml@dev
+    uses: ./.github/workflows/deploy-to-s3.yml@develop
     with:
       CI_ENV: develop
       CONTENTFUL_ENVIRONMENT: 'develop'

@@ -1,12 +1,12 @@
-name: Github Action Workflow DEV
+name: Github Action Workflow PROD
 
 on:
   push:
     branches:
-      - dev
+      - main
   repository_dispatch:
     types:
-      - build-dev
+      - build-prod
   workflow_dispatch:
 
 concurrency:
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build-dev:
-    uses: Devops-Grupo-8/webapp/.github/workflows/deploy-to-s3.yml@dev
+    uses: ./.github/workflows/deploy-to-s3.yml@develop
     with:
       CI_ENV: develop
       CONTENTFUL_ENVIRONMENT: 'develop'
