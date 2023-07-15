@@ -46,7 +46,7 @@ jobs:
       - name: Update NPM
         run: npm install -g npm@8
 
-      -name: Permisos de acceso a Build.sh
+      - name: Permisos de acceso a Build.sh
         run: chmod +x ./.github/scripts/build.sh
 
       - name: Build React static site
@@ -65,7 +65,7 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{secrets.AWS_DEFAULT_REGION}}
 
-      -name: Permisos de acceso a Deploy.sh
+      - name: Permisos de acceso a Deploy.sh
         run: chmod +x ./.github/scripts/deploy.sh
 
       - name: S3 Deploy
