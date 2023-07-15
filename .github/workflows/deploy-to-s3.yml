@@ -54,11 +54,6 @@ jobs:
 
       - name: Build React static site
         run: npm run build
-        shell: bash
-        env:
-          CI_ENV: ${{ inputs.CI_ENV }}
-          CONTENTFUL_ENVIRONMENT: ${{ inputs.CONTENTFUL_ENVIRONMENT }}
-          S3_ORIGIN_BUCKET: ${{ secrets.S3_ORIGIN_BUCKET }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
