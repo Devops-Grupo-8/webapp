@@ -4,6 +4,7 @@ setup: true
 
 orbs:
   node: circleci/node@5.0.3
+  split-config: bufferings/split-config@0.1.0 
 
 workflows:
   generate-config:
