@@ -11,3 +11,5 @@ workflows:
     jobs:
       - split-config/generate-config:
           find-config-regex: .*/\.circleci/*.*\.yml
+
+
