@@ -47,8 +47,13 @@ jobs:
         run: npm install -g npm@8
 
       - name: Build React static site
-        run: ../.github/scripts/build.sh
-        shell: bash
+        run: 
+          command: 
+              set -e
+              export COMMIT_ID=$(git log --pretty="%h" --no-merges -1)
+              export COMMIT_DATE="$(git log --date=format:'%Y-%m-%d %H:%M:%S' --pretty="%cd" --no-merges -1)"
+              rm -rf ./out
+              npm run build
         env:
           CI_ENV: ${{ inputs.CI_ENV }}
           CONTENTFUL_ENVIRONMENT: ${{ inputs.CONTENTFUL_ENVIRONMENT }}
