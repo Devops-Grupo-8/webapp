@@ -47,7 +47,7 @@ jobs:
         run: npm install -g npm@8
 
       - name: Build React static site
-        run: ./.github/scripts/build.sh
+        run: ../.github/scripts/build.sh
         shell: bash
         env:
           CI_ENV: ${{ inputs.CI_ENV }}
