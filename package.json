@@ -1,12 +1,20 @@
 {
   "scripts": {
     "start": "webpack serve --port 9000 --env isLocal",
-    "lint": "eslint src",
     "test": "jest --passWithNoTests",
     "format": "prettier --write .",
     "build": "webpack --mode=production",
     "analyze": "webpack --env analyze",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "next lint",
+    "lint-staged": "lint-staged",
+    "linters": "npm-run-all -p lint sass-lint adviser-dev ls-lint tsc",
+    "linters-ci": "npm-run-all -p lint adviser-ci sass-lint ls-lint tsc",
+    "adviser-dev": "adviser --tags dev --verbose",
+    "adviser-ci": "adviser --tags ci --verbose --quiet",
+    "sass-lint": "stylelint \"./src/*/.scss\"",
+    "ls-lint": "node_modules/.bin/ls-lint",
+    "tsc": "tsc"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
