@@ -46,26 +46,25 @@ jobs:
       - name: Update NPM
         run: npm install -g npm@8
 
-      - name: Permisos de acceso a Build.sh
-        run: chmod +x ./.github/scripts/build.sh
+      - name: Clear Prepare Script
+        run: npm set-script prepare ""
 
-      - name: Build React static site
-        run: ./.github/scripts/build.sh
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build App
+        run: npm run build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{secrets.AWS_DEFAULT_REGION}}
+
+      - name: S3 Deploy
+        run: ./.github/scripts/deploy.sh
         shell: bash
         env:
-          CI_ENV: ${{ inputs.CI_ENV }}
-          CONTENTFUL_ENVIRONMENT: ${{ inputs.CONTENTFUL_ENVIRONMENT }}
-  deploy:
-      runs-on: ubuntu-latest
-      steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      
-      
-      - name: sync  
-        uses: ./
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           S3_ORIGIN_BUCKET: ${{ secrets.S3_ORIGIN_BUCKET }}
