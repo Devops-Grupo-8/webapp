@@ -14,7 +14,7 @@ env-suffix-parameter: &env-suffix-parameter
   env_suffix:
     description: 'Dynamic env variable suffix'
     type: enum
-    enum: ['', '_DEV', '_TEST', '_PROD']
+    enum: ['', '_DEV', '_STAGE', '_PROD', '_CLIENT']
     default: ''
 
 #################################
@@ -162,7 +162,7 @@ jobs:
         description: 'CI Environment'
         default: 'development'
         type: enum
-        enum: ['development', 'testing', 'production']
+        enum: ['development', 'staging', 'production']
       gtm_id:
         description: 'GTM Container ID'
         default: 'GTM-0000000'
