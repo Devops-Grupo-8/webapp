@@ -1,10 +1,5 @@
 version: 2.1
 
-environment:
-  AWS_ACCESS_KEY_ID: ASIAQU62E6EGWJSARNFO
-  AWS_SECRET_ACCESS_KEY: UDJR1X5Fe0L1HL67wbhTuEryuCin3XsZNOuz1+zB
-  AWS_DEFAULT_REGION: us-east-1
-
 orbs:
   node: circleci/node@5.0.3
   aws-s3: circleci/aws-s3@3.1.1
@@ -45,16 +40,6 @@ jobs:
       - run:
           name: Run Tests
           command: npm test
-
-      - run:
-          name: Setear AWS CREDENTIALS
-          command: |
-            unset AWS_ACCESS_KEY_ID
-            unset AWS_SECRET_ACCESS_KEY 
-            aws configure set aws_access_key_id ASIAQU62E6EGWJSARNFO
-            aws configure set aws_secret_access_key UDJR1X5Fe0L1HL67wbhTuEryuCin3XsZNOuz1+zB
-            aws configure set default.region us-east-1
-            aws configure list
 
       - aws-s3/sync:
           from: dist/
