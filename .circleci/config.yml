@@ -1,60 +1,12 @@
 version: 2.1
 
+setup: true
+
 orbs:
   node: circleci/node@5.0.3
-  aws-s3: circleci/aws-s3@3.1.1
-
-jobs:
-  build-test-deploy:
-    docker:
-      - image: circleci/node:14
-
-    steps:
-      - checkout
-
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-
-      - run:
-          name: Install Dependencies
-          command: npm install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      - run:
-          name: Build
-          command: npm run build
-
-      - run:
-          name: Run Tests
-          command: npm test
-
-      - run:
-          name: Setear AWS CREDENTIALS
-          command: |
-            aws configure set aws_access_key_id ASIAQU62E6EGWJSARNFO
-            aws configure set aws_secret_access_key UDJR1X5Fe0L1HL67wbhTuEryuCin3XsZNOuz1+zB
-            aws configure set aws_session_token FwoGZXIvYXdzEK3//////////wEaDHxxoFa2MDcAWemKxiLFAfiomcW5WoJrnW++WOhmQUgEReGrrWtPu5sO76iqIZwWQ2Bz1boQhGt3UuIInDOwQE7IvIMdlkNRRf831eUe/461g3DBzQVtGoXNxFon+rxVljVjTzSZIPe34gPFpjkiMPj0Hk019uR2cvUwKoOgDnYs0X9oIg3qj5LbtISExoTETBT0z1Dp89lH0MOLVxOVJbEe4M83zF1T+pzfgEaCjxLwT3PY1bE8FpNzvx7oSe6sudh/Fc1qQdm0p/jy5ioTdZk0WOKxKOasyKUGMi1xsmqnI4Vw0pGODvnsicDDasUFdKRmSc3khSeqrUvkpIdKv6xucz1k1xqxFtc=
-            aws configure set default.region us-east-1
-
-      - aws-s3/sync:
-          from: dist/
-          to: s3://devops-grupo-8-bucket-prod/
 
 workflows:
-  version: 2
-  build-test-deploy:
+  generate-config:
     jobs:
-      - build-test-deploy
+      - split-config/generate-config:
+          find-config-regex: .*/\.circleci/*.*\.yml
