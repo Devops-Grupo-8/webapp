@@ -28,8 +28,7 @@
     "webpack-cli": "^4.8.0",
     "webpack-config-single-spa": "^5.0.0",
     "webpack-dev-server": "^4.0.0",
-    "webpack-merge": "^5.8.0",
-    "npm-run-all": "4.1.5"
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "single-spa": "^5.9.3",
