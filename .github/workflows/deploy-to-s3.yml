@@ -53,12 +53,20 @@ jobs:
         run: npm install
 
       - name: Build React static site
-        run: npm run build
+        run: ./.github/scripts/build.sh
+        shell: bash
+        env:
+          CI_ENV: ${{ inputs.CI_ENV }}
+          CONTENTFUL_ENVIRONMENT: ${{ inputs.CONTENTFUL_ENVIRONMENT }}
+          S3_ORIGIN_BUCKET: ${{ secrets.S3_ORIGIN_BUCKET }}
 
       - name: Configure AWS Credentials
-        run: export AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}}
-        run: export AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}}
-        run: export AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{secrets.AWS_DEFAULT_REGION}}
 
       - name: S3 Deploy
         run: ./.github/scripts/deploy.sh
