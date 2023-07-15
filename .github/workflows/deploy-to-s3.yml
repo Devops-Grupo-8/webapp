@@ -55,6 +55,9 @@ jobs:
       - name: Permisos de acceso a Build.sh
         run: chmod +x ./.github/scripts/build.sh
 
+      - name: Permisos de acceso a deploy.sh
+        run: chmod +x ./.github/scripts/deploy.sh
+
       - name: Build React static site
         run: ./.github/scripts/build.sh
         shell: bash
