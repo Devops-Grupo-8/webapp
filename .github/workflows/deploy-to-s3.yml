@@ -55,7 +55,6 @@ jobs:
         env:
           CI_ENV: ${{ inputs.CI_ENV }}
           CONTENTFUL_ENVIRONMENT: ${{ inputs.CONTENTFUL_ENVIRONMENT }}
-          S3_ORIGIN_BUCKET: ${{ secrets.S3_ORIGIN_BUCKET }}
   deploy:
       runs-on: ubuntu-latest
       steps:
@@ -69,4 +68,4 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION
+          S3_ORIGIN_BUCKET: ${{ secrets.S3_ORIGIN_BUCKET }}
