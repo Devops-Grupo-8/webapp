@@ -1,4 +1,4 @@
-name: Github Action Workflow STAGE
+name: Github Action Workflow TEST
 
 on:
   push:
